@@ -11,14 +11,6 @@ define splunk_conf::inputs::monitor (
   $file_monitor = "monitor://${title}"
 
   if $ensure == 'present' {
-    augeas { "splunk-inputs-add-stanza-${file_monitor}":
-      lens    => 'Splunk.lns',
-      incl    => $inputs_conf,
-      changes => [
-        "set target[last()+1] ${file_monitor}",
-      ],
-      onlyif => "match *[. = '${file_monitor}'] size == 0",
-    }
 
     $index_set = $index ? { undef => '',
       default => "set \$target/index ${index}",
@@ -44,7 +36,7 @@ define splunk_conf::inputs::monitor (
       lens    => 'Splunk.lns',
       incl    => $inputs_conf,
       changes => [
-        "defvar target target[. = '${file_monitor}']",
+        "defnode target target[. = '${file_monitor}'] ${file_monitor}",
         $index_set,
         $sourcetype_set,
         $host_set,
