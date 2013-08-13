@@ -1,10 +1,7 @@
 define splunk_conf::inputs::monitor (
+    $set = undef,
+    $rm = undef,
     $ensure = 'present',
-    $index = undef,
-    $sourcetype= undef,
-    $host = undef,
-    $disabled = 'false',
-    $followTail = 0,
     $inputs_conf = '/opt/splunk/etc/system/local/inputs.conf'
   ) {
 
@@ -12,37 +9,19 @@ define splunk_conf::inputs::monitor (
 
   if $ensure == 'present' {
 
-    $index_set = $index ? { undef => '',
-      default => "set \$target/index ${index}",
-    }
+    $changes = flatten([
+      "defnode target target[. = '${file_monitor}'] ${file_monitor}",
+      prefix(join_keys_to_values($set, ' '), 'set $target/'),
+      prefix($rm, 'rm $target/'),
+    ])
 
-    $sourcetype_set = $sourcetype ? { undef  => '',
-      default => "set \$target/sourcetype ${sourcetype}",
-    }
-    
-    $host_set = $host ? { undef  => '',
-      default => "set \$target/host ${host}",
-    }
-
-    $disabled_set = $disabled ? { undef => '',
-      default => "set \$target/disabled ${disabled}",
-    }
-
-    $followTail_set = $followTail ? { undef => '',
-      default => "set \$target/followTail ${followTail}",
-    }
+    #$changes_print = join($changes, "\n")
+    #notice("\$changes:\n${changes_print}")
 
     augeas { "splunk-inputs-update-stanza-${file_monitor}":
       lens    => 'Splunk.lns',
       incl    => $inputs_conf,
-      changes => [
-        "defnode target target[. = '${file_monitor}'] ${file_monitor}",
-        $index_set,
-        $sourcetype_set,
-        $host_set,
-        $disabled_set,
-        $followTail_set,
-      ]
+      changes => $changes,
     }
   }
 
