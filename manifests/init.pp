@@ -1,7 +1,7 @@
 define splunk_conf (
     $config_file,
-    $set = undef,
-    $rm = undef,
+    $set = {},
+    $rm = [],
     $ensure = 'present'
   ) {
 
