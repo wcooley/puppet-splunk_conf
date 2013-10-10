@@ -23,22 +23,33 @@
 #
 # === Examples
 #
-#   splunk_conf { 'monitor:///foo/bar/baz.log':
+#   splunk_conf { 'baz.log':
 #     config_file  => '/opt/splunkforwarder/etc/system/local/inputs.conf',
+#     stanza       => 'monitor:///foo/bar/baz/log',
 #     set          => {
 #       sourcetype => 'foo',
 #     },
 #     rm => [ 'disabled' ],
 #   }
 #
-#   splunk_conf { 'monitor:///foo/bar/baz.log':
+#   splunk_conf { 'baz.log':
 #     config_file => '/opt/splunkforwarder/etc/system/local/inputs.conf',
+#     stanza       => 'monitor:///foo/bar/baz/log',
 #     ensure      => 'absent',
+#   }
+#
+#   splunk_conf { 'server_splunkd_settings':
+#     config_file    => '/opt/splunk/etc/system/local/web.conf',
+#     stanza         => 'settings',
+#     set            => {
+#       mgmtHostPort => '127.0.0.1:18089',
+#     }
+#     ensure      => 'present',
 #   }
 #
 # === Authors
 #
-# Wil Cooley <wcooley@nakedape.cc>
+# Wil Cooley <wcooley@nakedape.cc> and modified by Alex Scoble <itblogger@gmail.com>
 #
 # === Copyright
 #
@@ -58,6 +69,7 @@
 #
 define splunk_conf (
     $config_file,
+    $stanza,
     $set = {},
     $rm = [],
     $ensure = 'present'
@@ -66,13 +78,13 @@ define splunk_conf (
   case $ensure {
     'present': {
       $changes = flatten([
-        "defnode target target[. = '${title}'] ${title}",
+        "defnode target target[. = '${stanza}'] ${stanza}",
         prefix(join_keys_to_values($set, ' '), 'set $target/'),
         prefix($rm, 'rm $target/'),
       ])
     }
     'absent': {
-      $changes = "rm target[. = '${title}']"
+      $changes = "rm target[. = '${stanza}']"
     }
     default: {
       fail("status=unrecognized_value name=ensure value=\"${ensure}\"")
