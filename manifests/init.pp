@@ -5,7 +5,13 @@
 # === Parameters
 #
 # [*namevar*]
-#   Name of section in ini-file.
+#   The title of the resource. If *stanza* is not given, the *namevar* is used
+#   instead.
+#
+# [*stanza*]
+#   Name of section in ini-file. Generally *namevar* should be the stanza, but
+#   to manage the same stanza in multiple files, the *namevar* can be abstract
+#   and unique.  Defaults to *namevar*.
 #
 # [*config_file*]
 #   *Required* Path to config file to manipulate.
@@ -49,7 +55,8 @@
 #
 # === Authors
 #
-# Wil Cooley <wcooley@nakedape.cc> and modified by Alex Scoble <itblogger@gmail.com>
+# Wil Cooley <wcooley@nakedape.cc>
+#  with modifications by Alex Scoble <itblogger@gmail.com>
 #
 # === Copyright
 #
@@ -69,22 +76,24 @@
 #
 define splunk_conf (
     $config_file,
-    $stanza,
+    $stanza = undef,
     $set = {},
     $rm = [],
     $ensure = 'present'
   ) {
 
+  $real_stanza = $stanza ? { undef => $name, default => $stanza }
+
   case $ensure {
     'present': {
       $changes = flatten([
-        "defnode target target[. = '${stanza}'] ${stanza}",
+        "defnode target target[. = '${real_stanza}'] ${real_stanza}",
         prefix(join_keys_to_values($set, ' '), 'set $target/'),
         prefix($rm, 'rm $target/'),
       ])
     }
     'absent': {
-      $changes = "rm target[. = '${stanza}']"
+      $changes = "rm target[. = '${real_stanza}']"
     }
     default: {
       fail("status=unrecognized_value name=ensure value=\"${ensure}\"")
