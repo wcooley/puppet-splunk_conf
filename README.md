@@ -1,3 +1,6 @@
+[![Build
+Status](https://travis-ci.org/wcooley/puppet-splunk_conf.png?branch=master)](https://travis-ci.org/wcooley/puppet-splunk_conf)
+
 Introduction
 ============
 
