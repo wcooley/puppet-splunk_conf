@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'puppetlabs_spec_helper', '>= 0.1.0', :require => false
+gem 'ruby-augeas', '>= 0.5.0', :require => false
 gem 'rspec-puppet-augeas', :github => 'domcleal/rspec-puppet-augeas', :require => false
-
 
 if puppetversion = ENV['PUPPET_VERSION']
   gem 'puppet', puppetversion, :require => false
