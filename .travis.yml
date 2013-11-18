@@ -9,6 +9,7 @@ env:
 gemfile: .gemfile
 branches:
   only:
-    - master
+    - 'master'
+    - 'wcooley/testing-with-rspec-puppet-augeas'
 notifications:
   email: false
