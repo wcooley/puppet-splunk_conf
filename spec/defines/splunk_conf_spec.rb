@@ -31,7 +31,6 @@ describe 'splunk_conf' do
     }
   end
 
-
   context 'remove stanza' do
     stanza = 'monitor:///foo/bar/baz.log2'
     let(:title) { stanza }
@@ -46,5 +45,35 @@ describe 'splunk_conf' do
         :incl => 'test-splunk-config.conf',
       })
     }
+  end
+end
+
+describe 'splunk_conf' do
+  context 'augeas-applied' do
+    stanza = 'monitor:///foo/bar/baz.log'
+    let(:title) { stanza }
+    let(:params) do {
+        :config_file => '/tmp/test-splunk-config.conf',
+        :set => {
+          'index' => 'index_foo',
+        }
+      }
+    end
+
+    it { should contain_augeas("splunk_conf-#{stanza}").with({
+        :changes => [
+          "defnode target target[. = '#{stanza}'] #{stanza}",
+          "set $target/index index_foo",
+        ],
+        :incl => '/tmp/test-splunk-config.conf',
+      })
+    }
+
+    describe_augeas "splunk_conf-#{stanza}",
+        :fixture => 'tmp/test-splunk-config.conf',
+        :lens => 'Splunk',
+        :target => '/tmp/test-splunk-config.conf' do
+      it { }
+    end
   end
 end
