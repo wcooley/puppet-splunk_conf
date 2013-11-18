@@ -73,7 +73,7 @@ describe 'splunk_conf' do
         :fixture => 'tmp/test-splunk-config.conf',
         :lens => 'Splunk',
         :target => '/tmp/test-splunk-config.conf' do
-      it { }
+      it { should execute }
     end
   end
 end
