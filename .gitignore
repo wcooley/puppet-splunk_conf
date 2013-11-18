@@ -16,5 +16,6 @@ tmtags
 *.swp
 tags
 
-# fixtures
-/spec/fixtures/
+# Fixtures
+/spec/fixtures/modules/
+/spec/fixtures/manifests/
