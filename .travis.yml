@@ -11,9 +11,5 @@ env:
   - PUPPET_VERSION="~> 2.7.0"
 #  - PUPPET_VERSION="3.3"
 gemfile: .gemfile
-branches:
-  only:
-    - 'master'
-    - 'wcooley/testing-with-rspec-puppet-augeas'
 notifications:
   email: false
