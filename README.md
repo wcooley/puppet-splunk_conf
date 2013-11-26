@@ -8,6 +8,8 @@ Puppet defined types for managing Splunk configuration. Adds high-level
 abstraction over Augeas lens. Augeas lens is included, since it is not in
 Augeas available for EL5.
 
+For documentation, see `manifests/init.pp` and .manifests/inputs/monitor.pp`.
+
 To Do
 -----
 
