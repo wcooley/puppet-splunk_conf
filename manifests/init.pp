@@ -88,7 +88,7 @@ define splunk_conf (
     'present': {
       $changes = flatten([
         "defnode target target[. = '${real_stanza}'] ${real_stanza}",
-        prefix(join_keys_to_values($set, ' '), 'set $target/'),
+        prefix(sort(join_keys_to_values($set, ' ')), 'set $target/'),
         prefix($rm, 'rm $target/'),
       ])
     }
