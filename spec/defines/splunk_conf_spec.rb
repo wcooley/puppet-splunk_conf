@@ -9,10 +9,7 @@ describe 'splunk_conf' do
         :config_file => 'test-splunk-config.conf',
         :set => {
           'index' => 'index_foo',
-# FIXME: Figure out how to introduce some determinism or change spec below to
-# somehow allow for the two "set" lines to be in arbitrary order.
-# Right now, it is not possible to test and get consistent results.
-#          'sourcetype' => 'sourcetype_bar',
+          'sourcetype' => 'sourcetype_bar',
         },
         :rm => [ 'rmattr1', 'rmattr2' ],
       }
@@ -22,7 +19,7 @@ describe 'splunk_conf' do
         :changes => [
           "defnode target target[. = '#{stanza}'] #{stanza}",
           "set $target/index index_foo",
-#          "set $target/sourcetype sourcetype_bar",
+          "set $target/sourcetype sourcetype_bar",
           "rm $target/rmattr1",
           "rm $target/rmattr2",
         ],
