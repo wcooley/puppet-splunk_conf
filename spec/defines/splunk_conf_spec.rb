@@ -49,38 +49,60 @@ describe 'splunk_conf' do
 end
 
 describe 'splunk_conf' do
-  context 'augeas-applied' do
+  context 'augeas applied to file' do
     stanza = 'monitor:///foo/bar/baz.log'
+    target_file = 'tmp/test-splunk-config.conf'
+
     let(:title) { stanza }
     let(:params) do {
-        :config_file => '/tmp/test-splunk-config.conf',
+        :config_file => '/' + target_file,
         :set => {
           'index' => 'index_foo',
-        }
+          'sourcetype' => 'sourcetype_bar',
+        },
+        :rm => ['rmattr1'],
       }
     end
 
-    it { should contain_augeas("splunk_conf-#{stanza}").with({
-        :changes => [
-          "defnode target target[. = '#{stanza}'] #{stanza}",
-          "set $target/index index_foo",
-        ],
-        :incl => '/tmp/test-splunk-config.conf',
-        :lens => 'Splunk.lns',
-      })
-    }
+    describe_augeas "splunk_conf-#{stanza}",
+        :lens => 'Splunk',
+        :target => target_file do
+      it { should execute.with_change }
+      it { should execute.idempotently }
+      aug_path = "/files/#{target_file}/target[. = '#{stanza}']/"
+      it 'sets correct index' do
+        aug_get("#{aug_path}/index").should == 'index_foo'
+      end
+      it 'sets correct sourcetype' do
+        aug_get("#{aug_path}/sourcetype").should == 'sourcetype_bar'
+      end
+      it 'removes correct attribute' do
+        aug_match("#{aug_path}/rmattr1").should be_empty
+      end
+    end
+  end
+
+  context 'augeas applied to empty file' do
+    pending "not working for some reason"
+
+    stanza = 'monitor:///foo/bar/baz.log'
+    target_file = 'tmp/empty-splunk-config.conf'
+
+    let(:title) { stanza }
+    let(:params) do {
+        :config_file => '/' + target_file,
+        :set => {
+          'index' => 'index_foo',
+          'sourcetype' => 'sourcetype_bar',
+        },
+      }
+    end
 
     describe_augeas "splunk_conf-#{stanza}",
-        :fixture => 'tmp/test-splunk-config.conf',
         :lens => 'Splunk',
-        :target => 'tmp/test-splunk-config.conf' do
-      it 'should run augparse' do
-        pending 'rspec-puppet-augeas working w/local lens'
-        #should execute.with_change
-        augparse()
-#        aug_get("/files/tmp/test-splunk-config.conf/monitor:///foo/bar/baz.log/index").should == 'index_foo'
-        #should execute.idempotently
-      end
+        :target => target_file do
+      #it { should execute.with_change }
+      #it { should execute.idempotently }
     end
   end
 end
