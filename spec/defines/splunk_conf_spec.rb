@@ -83,7 +83,7 @@ describe 'splunk_conf' do
   end
 
   context 'augeas applied to empty file' do
-    pending "not working for some reason"
+    pending("not working for some reason") do
 
     stanza = 'monitor:///foo/bar/baz.log'
     target_file = 'tmp/empty-splunk-config.conf'
@@ -101,8 +101,9 @@ describe 'splunk_conf' do
     describe_augeas "splunk_conf-#{stanza}",
         :lens => 'Splunk',
         :target => target_file do
-      #it { should execute.with_change }
-      #it { should execute.idempotently }
+      it { should execute.with_change }
+      it { should execute.idempotently }
     end
+    end # pending
   end
 end
