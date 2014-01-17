@@ -1,5 +1,5 @@
 name    'wcooley/splunk_conf'
-version '0.1.1'
+version '0.1.2'
 source 'https://github.com/wcooley/puppet-splunk_conf.git'
 author 'Wil Cooley <wcooley@nakedape.cc>'
 license 'Apache License, Version 2.0'
