@@ -7,7 +7,7 @@ gem 'rspec-core', '~> 2', :require => false
 gem 'rspec-mocks', '~> 2', :require => false
 gem 'rspec-expectations', '~> 2', :require => false
 gem 'rspec-puppet', '< 1.0.0', :require => false
-gem 'rspec-puppet-augeas', :github => 'domcleal/rspec-puppet-augeas', :require => false
+gem 'rspec-puppet-augeas', :require => false
 
 if puppetversion = ENV['PUPPET_VERSION']
   gem 'puppet', puppetversion, :require => false
